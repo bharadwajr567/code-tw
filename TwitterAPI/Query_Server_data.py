@@ -29,35 +29,30 @@ def query_file(server_file):
 
     # open a text file to write and append the output data
     with open("file_output.txt", "a") as writer:
-        '''
-        This nested for loop below is a little confusing 
-        but will try to explain as clearly as possible
-        '''
-
-        # Start by getting each item of the server list and compare it to the rows beneath it
+        # Use a dictionary to keep success/error by application and version
         for i in range(0, len(server_list)):
             # provide names for the dictionary values
             app = server_list[i]['Application']
             ver = server_list[i]['Version']
-            success = server_list[i]['Success_Count']
-            error = server_list[i]['Error_Count']
-            # loop through each item in the list starting with the row below the one being compared
-            for j in range(i + 1, len(server_list)):
-                # if the Application and Version are the same
-                if app == server_list[j]['Application'] and ver == server_list[j]['Version']:
-                    # then aggregate the data; get new total for the success and errors
-                    success += server_list[j]['Success_Count']
-                    error += server_list[j]['Error_Count']
-            # calculate the success rate
-            success_rate = success/(success + error)
-            # reset the success and error values to 0
-            success = 0
-            error = 0
+            key = app + ' ' + ver
+            if key in res:
+              res[key]['success'] = res[key]['success'] + server_list[i]['Success_Count']
+              res[key]['error'] = res[key]['error'] + server_list[i]['Error_Count']
+            else:
+              res[key]['success'] = server_list[i]['Success_Count']
+              res[key]['error'] = server_list[i]['Error_Count']
+
+        for k,v in res.items():
+            app = k.split(' ')[0]
+            ver = k.split(' ')[1]
+            success_rate = ( v['success'] * 100.0) / (v['success'] + v['error'])
             # write the output to a file
             writer.write(f"Your application {app} with version {ver} has a success rate of {success_rate:.2f}\n")
             # print the output to the console
             print(f"Your application {app} with version {ver} has a success rate of {success_rate:.2f}")
 
+
+query_file('servers.txt')
 
 
 
