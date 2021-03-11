@@ -28,6 +28,7 @@ $rm -rf `pipenv --venv`
 1. In your terminal within the same directory (Desktop/TwitterAPI) run: $ python3 -m venv interview 
 2. Activate the virtual environment: $ . venv/bin/activate 
 3. Install Flask in virtual environment by running: $ pip3 install Flask
+
 Now run the Flask API by executing the following command: 
 (i). $ export FLASK_APP=flask_api.py 
 (ii). $ flask run
